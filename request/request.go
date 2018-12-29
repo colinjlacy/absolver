@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -43,6 +44,7 @@ func Attempt(filepath string, filename string) (string, error) {
 		return "", err
 	}
 	var data RequestResponse
+	log.Print(data)
 	err = json.NewDecoder(response.Body).Decode(&data)
 	// defer response.Body.Close()
 	if err != nil {
