@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -44,11 +43,15 @@ func Attempt(filepath string, filename string) (string, error) {
 		return "", err
 	}
 	var data RequestResponse
-	log.Print(data)
-	err = json.NewDecoder(response.Body).Decode(&data)
-	// defer response.Body.Close()
+	var raw []byte
+	_, err = response.Body.Read(raw)
 	if err != nil {
 		return "", fmt.Errorf("could not read request response body: %s", err)
+	}
+	defer response.Body.Close()
+	err = json.Unmarshal(raw, data)
+	if err != nil {
+		return "", fmt.Errorf("could not unmarshal request response: %s", err)
 	}
 	return data.Path, nil
 }
