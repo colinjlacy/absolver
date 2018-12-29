@@ -34,6 +34,7 @@ func Attempt(filepath string, filename string) (string, error) {
 	}
 	busy = true
 	jsonData := map[string]string{"filepath": filepath, "filename": filename}
+	log.Println(jsonData)
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {
 		return "", fmt.Errorf("could not marshal JSON from request attempt parameters: %s", err)
