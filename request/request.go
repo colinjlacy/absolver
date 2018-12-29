@@ -19,7 +19,7 @@ type RequestResponse struct {
 
 // TODO: should be set in env vars
 var protocol = "http"
-var scantasticHostname = "localhost"
+var scantasticHostname = "10.0.1.48"
 var scantasticPort = "8000"
 var scantasticTargetPath = "scan"
 
@@ -43,15 +43,9 @@ func Attempt(filepath string, filename string) (string, error) {
 		return "", err
 	}
 	var data RequestResponse
-	var raw []byte
-	_, err = response.Body.Read(raw)
+	err = json.NewDecoder(response.Body).Decode(&data)
 	if err != nil {
 		return "", fmt.Errorf("could not read request response body: %s", err)
-	}
-	defer response.Body.Close()
-	err = json.Unmarshal(raw, data)
-	if err != nil {
-		return "", fmt.Errorf("could not unmarshal request response: %s", err)
 	}
 	return data.Path, nil
 }

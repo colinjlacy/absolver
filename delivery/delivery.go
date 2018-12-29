@@ -16,7 +16,7 @@ var supportedDeliveryMethods = [3]string{"dropbox", "email", "requestor"}
 
 // TODO: should be set in env vars
 var protocol = "http"
-var deliveryHostname = "localhost"
+var deliveryHostname = "10.0.1.48"
 var deliveryPort = "9000"
 var deliveryTargetPath = "scan"
 
