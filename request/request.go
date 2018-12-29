@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -38,6 +39,7 @@ func Attempt(filepath string, filename string) (string, error) {
 		return "", fmt.Errorf("could not marshal JSON from request attempt parameters: %s", err)
 	}
 	response, err := http.Post(address, "application/json", bytes.NewBuffer(jsonValue))
+	log.Println(response.StatusCode)
 	busy = false
 	if err != nil {
 		return "", err
