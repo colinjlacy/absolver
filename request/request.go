@@ -33,7 +33,7 @@ func Attempt(filepath string, filename string) (string, error) {
 		return "", fmt.Errorf("busy")
 	}
 	busy = true
-	jsonData := map[string]string{"filepath": filepath, "filename": filename}
+	jsonData := map[string]string{"foldername": filepath, "filename": filename}
 	log.Println(jsonData)
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {
