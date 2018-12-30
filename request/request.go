@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 )
 
@@ -34,23 +33,20 @@ func Attempt(filepath string, filename string) (string, error) {
 	}
 	busy = true
 	jsonData := map[string]string{"foldername": filepath, "filename": filename}
-	log.Println(jsonData)
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {
 		return "", fmt.Errorf("could not marshal JSON from request attempt parameters: %s", err)
 	}
 	response, err := http.Post(address, "application/json", bytes.NewBuffer(jsonValue))
-	log.Println(response.StatusCode)
 	busy = false
 	if err != nil {
 		return "", fmt.Errorf("there was a problem with the request to the scanner controller: %s", err)
 	}
 	if response.StatusCode > 399 {
-		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, err)
+		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, err.Error())
 	}
 	var data RequestResponse
 	err = json.NewDecoder(response.Body).Decode(&data)
-	log.Println("scanner response data", data)
 	if err != nil {
 		return "", fmt.Errorf("could not read request response body: %s", err)
 	}

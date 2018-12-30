@@ -25,12 +25,13 @@ func requestScan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	deliveryResult, err := delivery.Initiate(fullFilePath, params.Doorstep)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
 	}
 	jsonData := map[string]string{"result": deliveryResult}
-	jsonValue, _ := json.Marshal(jsonData)
-	json.NewEncoder(w).Encode(jsonValue)
+	json.NewEncoder(w).Encode(jsonData)
+
 }
