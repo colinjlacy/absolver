@@ -42,13 +42,13 @@ func Attempt(filepath string, filename string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("there was a problem with the request to the scanner controller: %s", err)
 	}
-	if response.StatusCode > 399 {
-		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, err.Error())
-	}
 	var data RequestResponse
 	err = json.NewDecoder(response.Body).Decode(&data)
 	if err != nil {
 		return "", fmt.Errorf("could not read request response body: %s", err)
+	}
+	if response.StatusCode > 399 {
+		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, data)
 	}
 	return data.Path, nil
 }
