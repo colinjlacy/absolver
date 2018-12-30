@@ -43,7 +43,10 @@ func Attempt(filepath string, filename string) (string, error) {
 	log.Println(response.StatusCode)
 	busy = false
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("there was a problem with the request to the scanner controller: %s", err)
+	}
+	if response.StatusCode > 399 {
+		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, err)
 	}
 	var data RequestResponse
 	err = json.NewDecoder(response.Body).Decode(&data)
