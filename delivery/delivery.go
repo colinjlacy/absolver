@@ -12,9 +12,9 @@ type Package struct {
 	Doorstep string
 }
 
-var supportedDeliveryMethods = [3]string{"dropbox", "email", "requestor"}
 
 // TODO: should be set in env vars
+var supportedDeliveryMethods = [3]string{"dropbox", "email", "requestor"}
 var protocol = "http"
 var deliveryHostname = "10.0.1.48"
 var deliveryPort = "9000"
@@ -23,10 +23,6 @@ var deliveryTargetPath = "scan"
 var address = protocol + "://" + deliveryHostname + ":" + deliveryPort + "/" + deliveryTargetPath
 
 func Initiate(filepath string, doorstep string) (string, error) {
-	err := validateDestination(doorstep)
-	if err != nil {
-		return "", err
-	}
 	jsonData := map[string]string{"path": filepath, "doorstep": doorstep}
 	jsonValue, err := json.Marshal(jsonData)
 	_, err = http.Post("https://httpbin.org/post", "application/json", bytes.NewBuffer(jsonValue))
@@ -37,7 +33,7 @@ func Initiate(filepath string, doorstep string) (string, error) {
 	return "COLIN", nil
 }
 
-func validateDestination(destination string) error {
+func ValidateDestination(destination string) error {
 	supportedMethod := false
 	for i := range supportedDeliveryMethods {
 		if destination == supportedDeliveryMethods[i] {

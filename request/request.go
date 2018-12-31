@@ -7,13 +7,13 @@ import (
 	"net/http"
 )
 
-type RequestParams struct {
+type ScanRequestParams struct {
 	Filename   string `json: filename`
 	Foldername string `json: foldername`
 	Doorstep   string `json: doorstep`
 }
 
-type RequestResponse struct {
+type ScanRequestResponse struct {
 	Path string `json: path`
 }
 
@@ -42,11 +42,12 @@ func Attempt(filepath string, filename string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("there was a problem with the request to the scanner controller: %s", err)
 	}
-	var data RequestResponse
+	var data ScanRequestResponse
 	err = json.NewDecoder(response.Body).Decode(&data)
 	if err != nil {
 		return "", fmt.Errorf("could not read request response body: %s", err)
 	}
+	// TODO: this isn't returning response error data correctly
 	if response.StatusCode > 399 {
 		return "", fmt.Errorf("the request to the scanner controller reruend a status of %d: %s", response.StatusCode, data)
 	}
