@@ -15,7 +15,7 @@ type Package struct {
 const protocol = "http"
 const deliveryHostname = "10.0.1.48"
 const deliveryPort = "9000"
-const deliveryTargetPath = "scan"
+const deliveryTargetPath = "email"
 
 var address = protocol + "://" + deliveryHostname + ":" + deliveryPort + "/" + deliveryTargetPath
 
