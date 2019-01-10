@@ -13,7 +13,7 @@ type Package struct {
 
 // TODO: should be set in env vars
 const protocol = "http"
-const deliveryHostname = "10.0.1.48"
+const deliveryHostname = "localhost"
 const deliveryPort = "9000"
 const deliveryTargetPath = "email"
 

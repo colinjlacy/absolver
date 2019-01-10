@@ -9,7 +9,7 @@ import (
 
 // TODO: should be set in env vars
 const protocol = "http"
-const archiveHostname = "10.0.1.48"
+const archiveHostname = "localhost"
 const archivePort = "4000"
 const archiveJobsPath = "jobs"
 const archiveJobPath = "job"

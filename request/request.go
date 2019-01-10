@@ -20,7 +20,7 @@ type ScanRequestResponse struct {
 
 // TODO: should be set in env vars
 var protocol = "http"
-var scantasticHostname = "10.0.1.48"
+var scantasticHostname = "localhost"
 var scantasticPort = "8000"
 var scantasticTargetPath = "scan"
 
