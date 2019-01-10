@@ -1,6 +1,7 @@
 package main
 
 import (
+	"absolver/archive"
 	"absolver/delivery"
 	"absolver/request"
 	"encoding/json"
@@ -19,6 +20,9 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/scan", requestScan).Methods("POST")
 	router.HandleFunc("/email", emailDelivery).Methods("POST")
+	router.HandleFunc("/jobs", archive.FetchCatalog).Methods("GET")
+	router.HandleFunc("/job/{jobName}", archive.PullFolder).Methods("GET")
+	router.HandleFunc("/image/{jobName}/{fileName}", archive.PullFile).Methods("GET")
 	log.Fatal(http.ListenAndServe(":3000", router))
 }
 
