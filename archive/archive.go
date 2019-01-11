@@ -99,16 +99,16 @@ func PullFolder(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	if response.StatusCode > 399 {
-		var data map[string]interface{}
-		err = json.NewDecoder(response.Body).Decode(&data)
-		if err != nil {
-			data = map[string]interface{}{"error": err.Error()}
-		}
-		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(data)
-		return
-	}
+	//if response.StatusCode > 399 {
+	//	var data map[string]string
+	//	err = json.NewDecoder(response.Body).Decode(&data)
+	//	if err != nil {
+	//		data = map[string]string{"error": err.Error()}
+	//	}
+	//	w.WriteHeader(http.StatusBadRequest)
+	//	_ = json.NewEncoder(w).Encode(data)
+	//	return
+	//}
 	defer response.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
