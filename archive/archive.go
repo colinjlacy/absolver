@@ -33,7 +33,7 @@ func PullFile(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	address := domain + archiveImagePath
+	address := domain + archiveImagePath + "/" + jobName + "/" + imageName
 	response, err := http.Get(address)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -91,7 +91,7 @@ func PullFolder(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	address := domain + archiveJobPath
+	address := domain + archiveJobPath + "/" + jobName
 	response, err := http.Get(address)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -99,22 +99,17 @@ func PullFolder(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	//if response.StatusCode > 399 {
-	//	var data map[string]string
-	//	err = json.NewDecoder(response.Body).Decode(&data)
-	//	if err != nil {
-	//		data = map[string]string{"error": err.Error()}
-	//	}
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	_ = json.NewEncoder(w).Encode(data)
-	//	return
-	//}
 	defer response.Body.Close()
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		jsonData := map[string]string{"error": err.Error()}
 		_ = json.NewEncoder(w).Encode(jsonData)
+		return
+	}
+	if response.StatusCode > 399 {
+		w.WriteHeader(response.StatusCode)
+		_, _ = w.Write(bodyBytes)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
