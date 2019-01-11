@@ -6,6 +6,7 @@ import (
 	"absolver/request"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -18,15 +19,18 @@ type DeliveryInstructions struct {
 
 func main() {
 	router := mux.NewRouter()
-	router.Headers("Access-Control-Allow-Origin", "*")
-	router.Headers("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	router.Headers("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	router.HandleFunc("/scan", requestScan).Methods("POST")
 	router.HandleFunc("/email", emailDelivery).Methods("POST")
 	router.HandleFunc("/jobs", archive.FetchCatalog).Methods("GET")
 	router.HandleFunc("/job/{jobName}", archive.PullFolder).Methods("GET")
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.PullFile).Methods("GET")
-	log.Fatal(http.ListenAndServe(":3000", router))
+
+	headersOk := handlers.AllowedHeaders([]string{"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"})
+	originsOk := handlers.AllowedOrigins([]string{"*", "localhost", "localhost:4200"})
+	methodsOk := handlers.AllowedMethods([]string{"GET", "DELETE", "POST", "PUT", "OPTIONS"})
+	corsRouter := handlers.CORS(headersOk, originsOk, methodsOk)(router)
+
+	log.Fatal(http.ListenAndServe(":3000", corsRouter))
 }
 
 func requestScan(w http.ResponseWriter, r *http.Request) {
