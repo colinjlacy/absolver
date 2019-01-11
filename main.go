@@ -18,6 +18,9 @@ type DeliveryInstructions struct {
 
 func main() {
 	router := mux.NewRouter()
+	router.Headers("Access-Control-Allow-Origin", "*")
+	router.Headers("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	router.Headers("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 	router.HandleFunc("/scan", requestScan).Methods("POST")
 	router.HandleFunc("/email", emailDelivery).Methods("POST")
 	router.HandleFunc("/jobs", archive.FetchCatalog).Methods("GET")
