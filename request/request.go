@@ -15,8 +15,10 @@ type ScanRequestParams struct {
 }
 
 type ScanRequestResponse struct {
-	Filename  string `json: filename`
-	Thumbnail string `json: thumbnail`
+	Foldername string `json: foldername`
+	PrettyName string `json: prettyName`
+	Filename   string `json: filename`
+	Thumbnail  string `json: thumbnail`
 }
 
 // TODO: should be set in env vars
@@ -34,7 +36,7 @@ func Attempt(foldername string, filename string, prettyName string) (ScanRequest
 		return ScanRequestResponse{}, fmt.Errorf("busy")
 	}
 	busy = true
-	jsonData := ScanRequestParams{Filename:filename, PrettyName:prettyName, Foldername:foldername, IncludeThumbnail:true}
+	jsonData := ScanRequestParams{Filename: filename, PrettyName: prettyName, Foldername: foldername, IncludeThumbnail: true}
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {
 		return ScanRequestResponse{}, fmt.Errorf("could not marshal JSON from request attempt parameters: %s", err)

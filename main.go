@@ -53,7 +53,7 @@ func requestScan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// respond
-	jsonData := map[string]string{"filename": response.Filename, "thumbnail": response.Thumbnail}
+	jsonData := map[string]string{"filename": response.Filename, "thumbnail": response.Thumbnail, "foldername": response.Foldername}
 	json.NewEncoder(w).Encode(jsonData)
 }
 
