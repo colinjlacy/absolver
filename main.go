@@ -23,7 +23,9 @@ func main() {
 	router.HandleFunc("/email", emailDelivery).Methods("POST")
 	router.HandleFunc("/jobs", archive.FetchCatalog).Methods("GET")
 	router.HandleFunc("/job/{jobName}", archive.PullFolder).Methods("GET")
+	router.HandleFunc("/job/{jobName}", archive.DeleteFolder).Methods("DELETE")
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.PullFile).Methods("GET")
+	router.HandleFunc("/image/{jobName}/{fileName}", archive.RemoveFile).Methods("DELETE")
 
 	headersOk := handlers.AllowedHeaders([]string{"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*", "localhost", "localhost:4200"})
@@ -44,7 +46,7 @@ func requestScan(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// send scan request
-	response, err := request.Attempt(params.Foldername, params.Filename)
+	response, err := request.Attempt(params.Foldername, params.Filename, params.PrettyName)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))

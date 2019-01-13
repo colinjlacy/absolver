@@ -9,6 +9,7 @@ import (
 
 type ScanRequestParams struct {
 	Filename         string `json: filename`
+	PrettyName       string `json: prettyName`
 	Foldername       string `json: foldername`
 	IncludeThumbnail bool   `json: includeThumbnail`
 }
@@ -27,13 +28,13 @@ var scantasticTargetPath = "scan"
 var address = protocol + "://" + scantasticHostname + ":" + scantasticPort + "/" + scantasticTargetPath
 var busy = false
 
-func Attempt(foldername string, filename string) (ScanRequestResponse, error) {
+func Attempt(foldername string, filename string, prettyName string) (ScanRequestResponse, error) {
 	// TODO: customize error types
 	if busy {
 		return ScanRequestResponse{}, fmt.Errorf("busy")
 	}
 	busy = true
-	jsonData := ScanRequestParams{Filename:filename, Foldername:foldername, IncludeThumbnail:true}
+	jsonData := ScanRequestParams{Filename:filename, PrettyName:prettyName, Foldername:foldername, IncludeThumbnail:true}
 	jsonValue, err := json.Marshal(jsonData)
 	if err != nil {
 		return ScanRequestResponse{}, fmt.Errorf("could not marshal JSON from request attempt parameters: %s", err)
