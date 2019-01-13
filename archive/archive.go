@@ -164,7 +164,7 @@ func DeleteFolder(w http.ResponseWriter, r *http.Request) {
 		_ = json.NewEncoder(w).Encode(jsonData)
 		return
 	}
-	address := domain + archiveImagePath + "/" + jobName
+	address := domain + archiveJobPath + "/" + jobName
 	r, err := http.NewRequest(http.MethodDelete, address, nil)
 	response, err := http.DefaultClient.Do(r)
 	if err != nil {
