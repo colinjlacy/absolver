@@ -12,15 +12,11 @@ import (
 	"net/http"
 )
 
-type DeliveryInstructions struct {
-	Foldername   string `json: foldername`
-	EmailAddress string `json: emailAddress`
-}
-
 func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/scan", requestScan).Methods("POST")
 	router.HandleFunc("/email", emailDelivery).Methods("POST")
+	router.HandleFunc("/store", warehouseDelivery).Methods("POST")
 	router.HandleFunc("/jobs", archive.FetchCatalog).Methods("GET")
 	router.HandleFunc("/job/{jobName}", archive.PullFolder).Methods("GET")
 	router.HandleFunc("/job/{jobName}", archive.DeleteFolder).Methods("DELETE")
@@ -59,11 +55,27 @@ func requestScan(w http.ResponseWriter, r *http.Request) {
 
 func emailDelivery(w http.ResponseWriter, r *http.Request) {
 	// parse req body
-	var params DeliveryInstructions
+	var params delivery.EmailPackage
 	_ = json.NewDecoder(r.Body).Decode(&params)
 	// TODO: validate request body!!!
 	// send delivery request
 	err := delivery.Deliver(params.Foldername, params.EmailAddress)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte(err.Error()))
+		return
+	}
+	w.WriteHeader(http.StatusCreated)
+	_ = json.NewEncoder(w).Encode(params)
+}
+
+func warehouseDelivery(w http.ResponseWriter, r *http.Request) {
+	// parse req body
+	var params delivery.WarehousePackage
+	_ = json.NewDecoder(r.Body).Decode(&params)
+	// TODO: validate request body!!!
+	// send delivery request
+	err := delivery.Store(params.Foldername, params.Destination)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write([]byte(err.Error()))
