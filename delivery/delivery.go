@@ -22,14 +22,16 @@ type WarehousePackage struct {
 const protocol = "http"
 const deliveryHostname = "localhost"
 const deliveryPort = "9000"
-const deliveryTargetPath = "email"
+const emailTargetPath = "email"
+const cloudTargetPath = "store"
 
-var address = protocol + "://" + deliveryHostname + ":" + deliveryPort + "/" + deliveryTargetPath
+var emailUrl = protocol + "://" + deliveryHostname + ":" + deliveryPort + "/" + emailTargetPath
+var cloudUrl = protocol + "://" + deliveryHostname + ":" + deliveryPort + "/" + cloudTargetPath
 
 func Deliver(foldername string, emailAddress string) error {
 	jsonData := map[string]string{"foldername": foldername, "emailAddress": emailAddress}
 	jsonValue, err := json.Marshal(jsonData)
-	_, err = http.Post(address, "application/json", bytes.NewBuffer(jsonValue))
+	_, err = http.Post(emailUrl, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		return err
 	}
@@ -39,7 +41,7 @@ func Deliver(foldername string, emailAddress string) error {
 func Store(foldername string, destination string) error {
 	jsonData := map[string]string{"foldername": foldername, "destination": destination}
 	jsonValue, err := json.Marshal(jsonData)
-	res, err := http.Post(address, "application/json", bytes.NewBuffer(jsonValue))
+	res, err := http.Post(cloudUrl, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		return err
 	}
