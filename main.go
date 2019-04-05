@@ -4,13 +4,25 @@ import (
 	"absolver/archive"
 	"absolver/delivery"
 	"absolver/request"
+	"absolver/sync"
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/koding/websocketproxy"
 	"log"
 	"net/http"
 )
+
+var wsProx *websocketproxy.WebsocketProxy
+
+func init() {
+	w, err := sync.SetSyncHandler()
+	if err != nil {
+		log.Fatal("could not establish websocket proxy: " + err.Error())
+	}
+	wsProx = w
+}
 
 func main() {
 	router := mux.NewRouter()
@@ -22,6 +34,7 @@ func main() {
 	router.HandleFunc("/job/{jobName}", archive.DeleteFolder).Methods("DELETE")
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.PullFile).Methods("GET")
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.RemoveFile).Methods("DELETE")
+	router.HandleFunc("/sync", wsProx.ServeHTTP).Methods("GET")
 
 	headersOk := handlers.AllowedHeaders([]string{"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*", "localhost", "localhost:4200"})
