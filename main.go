@@ -35,6 +35,7 @@ func main() {
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.PullFile).Methods("GET")
 	router.HandleFunc("/image/{jobName}/{fileName}", archive.RemoveFile).Methods("DELETE")
 	router.HandleFunc("/sync", wsProx.ServeHTTP).Methods("GET")
+	router.HandleFunc("/user/*", archive.DeleteFolder)
 
 	headersOk := handlers.AllowedHeaders([]string{"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization"})
 	originsOk := handlers.AllowedOrigins([]string{"*", "localhost", "localhost:4200"})
